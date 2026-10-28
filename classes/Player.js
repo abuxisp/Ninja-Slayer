@@ -1,5 +1,5 @@
-const X_VELOCITY = 200
-const Y_VELOCITY = 200
+const X_VELOCITY = 150
+const Y_VELOCITY = 150
 
 class Player {
   constructor({ x, y, size, velocity = { x: 0, y: 0 } }) {
@@ -20,28 +20,55 @@ class Player {
     }
     this.image.src = './images/player.png'
     this.currentFrame = 0
+    this.elapsedTime = 0
+    this.sprites = {
+      walkDown: {
+        x:0, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkUp: {
+        x:16, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkLeft: {
+        x:32, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkRight: {
+        x:48, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      }
+    }
+
+    this.currentSprite = this.sprites.walkDown
   }
 
   draw(c) {
     if (!this.loaded) return
 
     // Red square debug code
-    c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    c.fillRect(this.x, this.y, this.width, this.height)
+    //c.fillStyle = 'rgba(0, 0, 255, 0.5)'
+    //c.fillRect(this.x, this.y, this.width, this.height)
 
-    const cropbox = {
-      x:0, 
-      y:0, 
-      width: 16, 
-      height: 16
-    }
 
     c.drawImage(
       this.image, 
-      cropbox.x, 
-      cropbox.height * this.currentFrame, 
-      cropbox.width, 
-      cropbox.height, 
+      this.currentSprite.x, 
+      this.currentSprite.height * this.currentFrame + 0.5, 
+      this.currentSprite.width, 
+      this.currentSprite.height, 
       this.x, 
       this.y,
       this.width,
@@ -52,8 +79,14 @@ class Player {
   update(deltaTime, collisionBlocks) {
     if (!deltaTime) return
 
-    this.currentFrame = (this.currentFrame + 1) % 4
+    this.elapsedTime += deltaTime
 
+    const intervalToGoToNextFrame = 0.15
+    if(this.elapsedTime > intervalToGoToNextFrame) {
+      this.currentFrame = (this.currentFrame + 1) % this.currentSprite.frameCount
+      this.elapsedTime -= intervalToGoToNextFrame
+    }
+    
     // Update horizontal position and check collisions
     this.updateHorizontalPosition(deltaTime)
     this.checkForHorizontalCollisions(collisionBlocks)
@@ -82,12 +115,26 @@ class Player {
 
     if (keys.d.pressed) {
       this.velocity.x = X_VELOCITY
+
+      this.currentSprite = this.sprites.walkRight
+      this.currentSprite.frameCount = 4
     } else if (keys.a.pressed) {
       this.velocity.x = -X_VELOCITY
+
+      this.currentSprite = this.sprites.walkLeft
+      this.currentSprite.frameCount = 4
     } else if (keys.w.pressed) {
       this.velocity.y = -Y_VELOCITY
+
+      this.currentSprite = this.sprites.walkUp
+      this.currentSprite.frameCount = 4
     } else if (keys.s.pressed) {
       this.velocity.y = Y_VELOCITY
+
+      this.currentSprite = this.sprites.walkDown
+      this.currentSprite.frameCount = 4
+    } else {
+      this.currentSprite.frameCount = 1
     }
   }
 
