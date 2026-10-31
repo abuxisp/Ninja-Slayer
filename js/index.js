@@ -175,6 +175,21 @@ const player = new Player({
   size: 15,
 })
 
+const monsters = [
+  new Monster ({
+    x: 200,
+    y: 150,
+    size: 15,
+    imageSrc: './images/bamboo.png'
+  }),
+  new Monster ({
+    x: 300,
+    y: 150,
+    size: 15,
+    imageSrc: './images/dragon.png'
+  })
+]
+
 const keys = {
   w: {
     pressed: false,
@@ -222,6 +237,13 @@ function animate(backgroundCanvas) {
   c.drawImage(backgroundCanvas, 0, 0, mapWidthPx, mapHeightPx)
   drawAnimatedTiles(c, currentTime)
   player.draw(c)
+
+  for (let i = monsters.length - 1; i >= 0; i--) {
+    const monster = monsters[i]
+    monster.update(deltaTime, collisionBlocks)
+    monster.draw(c)
+  }
+
   c.drawImage(frontRendersCanvas, 0, 0, mapWidthPx, mapHeightPx)
 
   c.restore()
