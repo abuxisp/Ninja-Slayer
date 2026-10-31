@@ -8,9 +8,9 @@ canvas.height = 576 * dpr
 
 const MAP_ROWS = 28
 const MAP_COLS = 28
+
 const MAP_WIDTH = 16 * MAP_COLS
 const MAP_HEIGHT = 16 * MAP_ROWS
-
 
 const MAP_SCALE = dpr + 2
 
@@ -56,12 +56,10 @@ const tilesets = {
   l_Collisions: { imageUrl: './images/characters.png', tileSize: 16, animations: [] },
 };
 
-
-
 const collisionBlocks = []
-const blockSize = 16 
+const blockSize = 16
 
-collisions.forEach((row, y) => {
+collisions.forEach((row, y) => 
   row.forEach((symbol, x) => {
     if (symbol === 1) {
       collisionBlocks.push(
@@ -73,13 +71,12 @@ collisions.forEach((row, y) => {
       )
     }
   })
-})
+)
 
 const firstLayerKey = Object.keys(layersData)[0]
 const firstLayer = layersData[firstLayerKey]
 const mapWidthPx = firstLayer ? firstLayer[0].length * blockSize : 0
 const mapHeightPx = firstLayer ? firstLayer.length * blockSize : 0
-
 const tilesetImages = {}
 const animatedCells = {}
 const animationsByLayer = {}
@@ -93,6 +90,7 @@ const renderLayer = (tilesData, tilesetImage, tileSize, context, skipSymbols) =>
         const tileIndex = symbol - 1
         const srcX = (tileIndex % tilesPerRow) * tileSize
         const srcY = Math.floor(tileIndex / tilesPerRow) * tileSize
+
         context.drawImage(
           tilesetImage,
           srcX, srcY, tileSize, tileSize,
@@ -107,6 +105,7 @@ const renderStaticLayers = async (layersData) => {
   const offscreenCanvas = document.createElement('canvas')
   offscreenCanvas.width = Math.max(mapWidthPx * dpr, 1)
   offscreenCanvas.height = Math.max(mapHeightPx * dpr, 1)
+
   const offscreenContext = offscreenCanvas.getContext('2d')
   offscreenContext.imageSmoothingEnabled = false
   offscreenContext.scale(dpr, dpr)
@@ -117,8 +116,10 @@ const renderStaticLayers = async (layersData) => {
       try {
         const tilesetImage = await loadImage(tilesetInfo.imageUrl)
         tilesetImages[layerName] = tilesetImage
+
         const animations = tilesetInfo.animations || []
         animationsByLayer[layerName] = animations
+
         const startSymbols = new Set(animations.map((a) => a.frames[0]))
         if (startSymbols.size) {
           const cells = []
@@ -129,6 +130,7 @@ const renderStaticLayers = async (layersData) => {
           })
           animatedCells[layerName] = cells
         }
+
         renderLayer(tilesData, tilesetImage, tilesetInfo.tileSize, offscreenContext, startSymbols)
       } catch (error) {
         console.error(`Failed to load image for layer ${layerName}:`, error)
@@ -143,21 +145,26 @@ function drawAnimatedTiles(context, now) {
   for (const layerName in animatedCells) {
     const cells = animatedCells[layerName]
     if (!cells || !cells.length) continue
+
     const animations = animationsByLayer[layerName] || []
     const tilesetImage = tilesetImages[layerName]
     const info = tilesets[layerName]
     if (!tilesetImage || !info) continue
+
     const tileSize = info.tileSize
     const tilesPerRow = Math.ceil(tilesetImage.width / tileSize)
+
     for (const cell of cells) {
       const anim = animations.find((a) => a.frames[0] === cell.startSymbol)
       if (!anim) continue
+
       const fps = anim.fps > 0 ? anim.fps : 6
       const frameIndex = Math.floor((now / 1000) * fps) % anim.frames.length
       const symbol = anim.frames[frameIndex]
       const tileIndex = symbol - 1
       const srcX = (tileIndex % tilesPerRow) * tileSize
       const srcY = Math.floor(tileIndex / tilesPerRow) * tileSize
+
       context.drawImage(
         tilesetImage,
         srcX, srcY, tileSize, tileSize,
@@ -166,59 +173,57 @@ function drawAnimatedTiles(context, now) {
     }
   }
 }
-// END - Tile setup
 
-// Change xy coordinates to move player's default position
 const player = new Player({
   x: 100,
   y: 100,
   size: 15,
 })
 
+const monsterSprites = {
+  walkDown: { x: 0, y: 0, width: 16, height: 16, frameCount: 4 },
+  walkUp: { x: 16, y: 0, width: 16, height: 16, frameCount: 4 },
+  walkLeft: { x: 32, y: 0, width: 16, height: 16, frameCount: 4 },
+  walkRight: { x: 48, y: 0, width: 16, height: 16, frameCount: 4 }
+}
+
 const monsters = [
   new Monster ({
     x: 200,
     y: 150,
     size: 15,
-    imageSrc: './images/bamboo.png'
+    imageSrc: './images/bamboo.png',
+    sprites: monsterSprites
   }),
   new Monster ({
     x: 300,
     y: 150,
     size: 15,
-    imageSrc: './images/dragon.png'
+    imageSrc: './images/dragon.png',
+    sprites: monsterSprites
   })
 ]
 
 const keys = {
-  w: {
-    pressed: false,
-  },
-  a: {
-    pressed: false,
-  },
-  s: {
-    pressed: false,
-  },
-  d: {
-    pressed: false,
-  },
+  w: { pressed: false },
+  a: { pressed: false },
+  s: { pressed: false },
+  d: { pressed: false },
 }
 
 let lastTime = performance.now()
 let frontRendersCanvas
+
 function animate(backgroundCanvas) {
-  // Calculate delta time
   const currentTime = performance.now()
   const deltaTime = (currentTime - lastTime) / 1000
   lastTime = currentTime
 
-  // Update player position
   player.handleInput(keys)
   player.update(deltaTime, collisionBlocks)
 
   const horizontalScrollDistance = Math.min(Math.max(
-    0, 
+    0,
     player.center.x - VIEWPORT_CENTER_X),
     MAX_SCROLL_X
   )
@@ -229,7 +234,6 @@ function animate(backgroundCanvas) {
     MAX_SCROLL_Y
   )
 
-  // Render scene
   c.save()
   c.scale(MAP_SCALE, MAP_SCALE)
   c.translate(-horizontalScrollDistance, -verticalScrollDistance)
@@ -245,7 +249,6 @@ function animate(backgroundCanvas) {
   }
 
   c.drawImage(frontRendersCanvas, 0, 0, mapWidthPx, mapHeightPx)
-
   c.restore()
 
   requestAnimationFrame(() => animate(backgroundCanvas))
@@ -268,4 +271,3 @@ const startRendering = async () => {
 }
 
 startRendering()
-

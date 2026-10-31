@@ -18,9 +18,59 @@ class Monster {
     this.image.src = imageSrc
     this.currentFrame = 0
     this.elapsedTime = 0
-    this.sprites = sprites
+    this.sprites = {
+      walkDown: {
+        x:0, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkUp: {
+        x:16, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkLeft: {
+        x:32, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      },
+      walkRight: {
+        x:48, 
+        y:0, 
+        width: 16, 
+        height: 16,
+        frameCount: 4
+      }
+    }
 
-    this.currentSprite = Object.values(this.sprites)
+    this.currentSprite = this.sprites.walkDown
+  }
+
+  draw(c) {
+    if (!this.loaded) return
+
+    // Red square debug code
+    //c.fillStyle = 'rgba(0, 0, 255, 0.5)'
+    //c.fillRect(this.x, this.y, this.width, this.height)
+
+
+    c.drawImage(
+      this.image, 
+      this.currentSprite.x, 
+      this.currentSprite.height * this.currentFrame + 0.5, 
+      this.currentSprite.width, 
+      this.currentSprite.height, 
+      this.x, 
+      this.y,
+      this.width,
+      this.height
+    )
   }
 
   update(deltaTime, collisionBlocks) {
