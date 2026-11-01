@@ -274,6 +274,19 @@ function animate(backgroundCanvas) {
     const monster = monsters[i]
     monster.update(deltaTime, collisionBlocks)
     monster.draw(c)
+
+    //detect for collision
+    if (
+      player.attackBox.x + player.attackBox.width >= monster.x &&
+      player.attackBox.x <= monster.x + monster.width &&
+      player.attackBox.y + player.attackBox.height >= monster.y &&
+      player.attackBox.y <= monster.y + monster.height &&
+      player.isAttacking
+    ) {
+      monsters.splice(i, 1)
+    }
+
+
   }
 
   c.drawImage(frontRendersCanvas, 0, 0, mapWidthPx, mapHeightPx)

@@ -93,11 +93,40 @@ class Player {
     this.facing = 'down'
     this.isAttacking = false
     this.attackTimer = 0
+
+
+    this.attackBoxes = {
+      right: {
+        xOffset: 10,
+        yOffset: 9,
+        width: 20,
+        height: 5,
+      },
+      left: {
+        xOffset: -16,
+        yOffset: 9,
+        width: 20,
+        height: 5,
+      },
+      up: {
+        xOffset: 2,
+        yOffset: -15,
+        width: 5,
+        height: 20,
+      },
+      down: {
+        xOffset: 2,
+        yOffset: 10,
+        width: 5,
+        height: 20,
+      },
+    }
+
     this.attackBox = {
-      x: this.x,
-      y: this.y,
-      width: 20,
-      height: 5,
+      x: this.x + this.attackBoxes[this.facing].xOffset,
+      y: this.y + this.attackBoxes[this.facing].yOffset,
+      width: this.attackBoxes[this.facing].width,
+      height: this.attackBoxes[this.facing].height,
     }
   }
 
@@ -148,13 +177,13 @@ class Player {
     //c.fillRect(this.x, this.y, this.width, this.height)
 
     // Attack box debug code
-    c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    c.fillRect(
-      this.attackBox.x, 
-      this.attackBox.y, 
-      this.attackBox.width, 
-      this.attackBox.height
-    )
+    //c.fillStyle = 'rgba(0, 0, 255, 0.5)'
+   // c.fillRect(
+    //  this.attackBox.x, 
+    //  this.attackBox.y, 
+    //  this.attackBox.width, 
+    //  this.attackBox.height
+    //)
 
 
     c.drawImage(
@@ -242,10 +271,10 @@ class Player {
 
 
     this.attackBox = {
-      x: this.x + 10,
-      y: this.y,
-      width: 20,
-      height: 5,
+      x: this.x + this.attackBoxes[this.facing].xOffset,
+      y: this.y + this.attackBoxes[this.facing].yOffset,
+      width: this.attackBoxes[this.facing].width,
+      height: this.attackBoxes[this.facing].height,
     }
   }
 

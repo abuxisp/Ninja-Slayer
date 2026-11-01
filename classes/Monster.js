@@ -1,5 +1,5 @@
 class Monster {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites }) {
+  constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites, health }) {
     this.x = x
     this.y = y
     this.originalPosition = {
@@ -26,7 +26,22 @@ class Monster {
     this.sprites = sprites
 
     this.currentSprite = Object.values(this.sprites)[0]
+
+    this.health = health
+    this.isInvincible = false
+    this.elapsedInvincibilityTime = 0
+    this.invincibilityInterval = 0.3
+
   }
+  receiveHit() {
+
+    this.health--
+    this.isInvincible = true
+
+  }
+
+
+
 
   draw(c) {
     if (!this.loaded) return
@@ -53,6 +68,15 @@ class Monster {
     if (!deltaTime) return
 
     this.elapsedTime += deltaTime
+
+    if (this.isInvincible) {
+      this.elapsedInvincibilityTime += deltaTime
+
+      if (this.elapsedInvincibilityTime >= this.invincibilityInterval) {
+        this.isInvincible = false
+        this.elapsedInvincibilityTime = 0
+      }
+    }
 
     const intervalToGoToNextFrame = 0.15
     if(this.elapsedTime > intervalToGoToNextFrame) {
