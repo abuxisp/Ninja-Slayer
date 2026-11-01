@@ -1,17 +1,25 @@
 class Monster {
-  constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites, health }) {
+  constructor({
+    x,
+    y,
+    size,
+    velocity = { x: 0, y: 0 },
+    imageSrc,
+    sprites,
+    health = 3,
+  }) {
     this.x = x
     this.y = y
     this.originalPosition = {
       x: x,
-      y: y
+      y: y,
     }
     this.width = size
     this.height = size
     this.velocity = velocity
     this.center = {
       x: this.x + this.width / 2,
-      y: this.y + this.height / 2
+      y: this.y + this.height / 2,
     }
 
     this.loaded = false
@@ -26,13 +34,12 @@ class Monster {
     this.sprites = sprites
 
     this.currentSprite = Object.values(this.sprites)[0]
-
     this.health = health
     this.isInvincible = false
     this.elapsedInvincibilityTime = 0
     this.invincibilityInterval = 0.3
-
   }
+
   receiveHit() {
     if (this.isInvincible) return
 
@@ -40,26 +47,29 @@ class Monster {
     this.isInvincible = true
   }
 
-
   draw(c) {
     if (!this.loaded) return
 
     // Red square debug code
-    //c.fillStyle = 'rgba(0, 0, 255, 0.5)'
-    //c.fillRect(this.x, this.y, this.width, this.height)
+    // c.fillStyle = 'rgba(0, 0, 255, 0.5)'
+    // c.fillRect(this.x, this.y, this.width, this.height)
 
-
+    let alpha = 1
+    if (this.isInvincible) alpha = 0.5
+    c.save()
+    c.globalAlpha = alpha
     c.drawImage(
-      this.image, 
-      this.currentSprite.x, 
-      this.currentSprite.height * this.currentFrame + 0.5, 
-      this.currentSprite.width, 
-      this.currentSprite.height, 
-      this.x, 
+      this.image,
+      this.currentSprite.x,
+      this.currentSprite.height * this.currentFrame + 0.5,
+      this.currentSprite.width,
+      this.currentSprite.height,
+      this.x,
       this.y,
       this.width,
       this.height
     )
+    c.restore()
   }
 
   update(deltaTime, collisionBlocks) {
@@ -85,8 +95,9 @@ class Monster {
       this.elapsedTime -= intervalToGoToNextFrame
     }
 
+    // Randomly choose place for enemy to move to
     this.setVelocity(deltaTime)
-    
+
     // Update horizontal position and check collisions
     this.updateHorizontalPosition(deltaTime)
     this.checkForHorizontalCollisions(collisionBlocks)
@@ -97,14 +108,16 @@ class Monster {
 
     this.center = {
       x: this.x + this.width / 2,
-      y: this.y + this.height / 2
+      y: this.y + this.height / 2,
     }
   }
 
   setVelocity(deltaTime) {
     const changeDirectionInterval = 1
-    if (this.elapsedMovementTime > changeDirectionInterval || 
-      this.elapsedMovementTime === 0) {
+    if (
+      this.elapsedMovementTime > changeDirectionInterval ||
+      this.elapsedMovementTime === 0
+    ) {
       this.elapsedMovementTime -= changeDirectionInterval
 
       const angle = Math.random() * Math.PI * 2
@@ -112,15 +125,15 @@ class Monster {
 
       const targetLocation = {
         x: this.originalPosition.x + Math.cos(angle) * CIRCLE_RADIUS,
-        y: this.originalPosition.y + Math.sin(angle) * CIRCLE_RADIUS
+        y: this.originalPosition.y + Math.sin(angle) * CIRCLE_RADIUS,
       }
 
-      const deltaX = targetLocation.x - this.x
-      const deltaY = targetLocation.y - this.y
+      const deltaX = targetLocation.x - this.x // 40
+      const deltaY = targetLocation.y - this.y // 20
 
       const hypotenuse = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-      const normalizedDeltaX = deltaX / hypotenuse
-      const normalizedDeltaY = deltaY / hypotenuse
+      const normalizedDeltaX = deltaX / hypotenuse // 0.6
+      const normalizedDeltaY = deltaY / hypotenuse // 0.4
 
       this.velocity.x = normalizedDeltaX * CIRCLE_RADIUS
       this.velocity.y = normalizedDeltaY * CIRCLE_RADIUS
@@ -160,6 +173,7 @@ class Monster {
         if (this.velocity.x > 0) {
           this.x = collisionBlock.x - this.width - buffer
           this.velocity.x = -this.velocity.x
+
           break
         }
       }
@@ -182,6 +196,7 @@ class Monster {
         if (this.velocity.y < 0) {
           this.y = collisionBlock.y + collisionBlock.height + buffer
           this.velocity.y = -this.velocity.y
+
           break
         }
 
