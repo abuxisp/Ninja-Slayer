@@ -2,6 +2,10 @@ class Monster {
   constructor({ x, y, size, velocity = { x: 0, y: 0 }, imageSrc, sprites }) {
     this.x = x
     this.y = y
+    this.originalPosition = {
+      x: x,
+      y: y
+    }
     this.width = size
     this.height = size
     this.velocity = velocity
@@ -18,38 +22,10 @@ class Monster {
     this.image.src = imageSrc
     this.currentFrame = 0
     this.elapsedTime = 0
-    this.sprites = {
-      walkDown: {
-        x:0, 
-        y:0, 
-        width: 16, 
-        height: 16,
-        frameCount: 4
-      },
-      walkUp: {
-        x:16, 
-        y:0, 
-        width: 16, 
-        height: 16,
-        frameCount: 4
-      },
-      walkLeft: {
-        x:32, 
-        y:0, 
-        width: 16, 
-        height: 16,
-        frameCount: 4
-      },
-      walkRight: {
-        x:48, 
-        y:0, 
-        width: 16, 
-        height: 16,
-        frameCount: 4
-      }
-    }
+    this.elapsedMovementTime = 0
+    this.sprites = sprites
 
-    this.currentSprite = this.sprites.walkDown
+    this.currentSprite = Object.values(this.sprites)[0]
   }
 
   draw(c) {
@@ -83,6 +59,8 @@ class Monster {
       this.currentFrame = (this.currentFrame + 1) % this.currentSprite.frameCount
       this.elapsedTime -= intervalToGoToNextFrame
     }
+
+    this.setVelocity(deltaTime)
     
     // Update horizontal position and check collisions
     this.updateHorizontalPosition(deltaTime)
@@ -95,6 +73,32 @@ class Monster {
     this.center = {
       x: this.x + this.width / 2,
       y: this.y + this.height / 2
+    }
+  }
+
+  setVelocity(deltaTime) {
+    this.elapsedMovementTime += deltaTime
+    if (this.elapsedMovementTime > 3) {
+      this.elapsedMovementTime -= 3
+
+      const angle = Math.random() * Math.PI * 2
+      const CIRCLE_RADIUS = 20
+
+      const targetLocation = {
+        x: this.originalPosition.x + Math.cos(angle) * CIRCLE_RADIUS,
+        y: this.originalPosition.y + Math.sin(angle) * CIRCLE_RADIUS
+      }
+
+      const deltaX = targetLocation.x - this.x
+      const deltaY = targetLocation.y - this.y
+
+      const hypotenuse = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+      const normalizedDeltaX = deltaX / hypotenuse
+      const normalizedDeltaY = deltaY / hypotenuse
+
+      this.velocity.x = normalizedDeltaX * 20
+      this.velocity.y = normalizedDeltaY * 20
+
     }
   }
 
