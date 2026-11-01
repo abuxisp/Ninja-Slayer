@@ -77,12 +77,13 @@ class Monster {
   }
 
   setVelocity(deltaTime) {
-    this.elapsedMovementTime += deltaTime
-    if (this.elapsedMovementTime > 3) {
-      this.elapsedMovementTime -= 3
+    const changeDirectionInterval = 1
+    if (this.elapsedMovementTime > changeDirectionInterval || 
+      this.elapsedMovementTime === 0) {
+      this.elapsedMovementTime -= changeDirectionInterval
 
       const angle = Math.random() * Math.PI * 2
-      const CIRCLE_RADIUS = 20
+      const CIRCLE_RADIUS = 15
 
       const targetLocation = {
         x: this.originalPosition.x + Math.cos(angle) * CIRCLE_RADIUS,
@@ -96,10 +97,11 @@ class Monster {
       const normalizedDeltaX = deltaX / hypotenuse
       const normalizedDeltaY = deltaY / hypotenuse
 
-      this.velocity.x = normalizedDeltaX * 20
-      this.velocity.y = normalizedDeltaY * 20
-
+      this.velocity.x = normalizedDeltaX * CIRCLE_RADIUS
+      this.velocity.y = normalizedDeltaY * CIRCLE_RADIUS
     }
+
+    this.elapsedMovementTime += deltaTime
   }
 
   updateHorizontalPosition(deltaTime) {
@@ -125,13 +127,14 @@ class Monster {
         // Check collision while player is going left
         if (this.velocity.x < -0) {
           this.x = collisionBlock.x + collisionBlock.width + buffer
+          this.velocity.x = -this.velocity.x
           break
         }
 
         // Check collision while player is going right
         if (this.velocity.x > 0) {
           this.x = collisionBlock.x - this.width - buffer
-
+          this.velocity.x = -this.velocity.x
           break
         }
       }
@@ -152,15 +155,15 @@ class Monster {
       ) {
         // Check collision while player is going up
         if (this.velocity.y < 0) {
-          this.velocity.y = 0
           this.y = collisionBlock.y + collisionBlock.height + buffer
+          this.velocity.y = -this.velocity.y
           break
         }
 
         // Check collision while player is going down
         if (this.velocity.y > 0) {
-          this.velocity.y = 0
           this.y = collisionBlock.y - this.height - buffer
+          this.velocity.y = -this.velocity.y
           break
         }
       }
