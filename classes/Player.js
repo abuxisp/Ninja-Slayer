@@ -19,6 +19,15 @@ class Player {
       this.loaded = true
     }
     this.image.src = './images/player.png'
+
+    //Player weapon
+    this.weaponSpriteHasLoaded = false
+    this.weaponSprite = new Image()
+    this.weaponSprite.onload = () => {
+      this.weaponSpriteHasLoaded = true
+    }
+    this.weaponSprite.src = './images/lance.png'
+
     this.currentFrame = 0
     this.elapsedTime = 0
     this.sprites = {
@@ -56,7 +65,7 @@ class Player {
   }
 
   draw(c) {
-    if (!this.loaded) return
+    if (!this.loaded || !this.weaponSpriteHasLoaded) return
 
     // Red square debug code
     //c.fillStyle = 'rgba(0, 0, 255, 0.5)'
@@ -74,6 +83,12 @@ class Player {
       this.width,
       this.height
     )
+
+    c.save()
+    c.translate(this.x, this.y)
+    c.rotate(Math.PI)
+    c.drawImage(this.weaponSprite, -3, -8, 6, 16)
+    c.restore()
   }
 
   update(deltaTime, collisionBlocks) {
