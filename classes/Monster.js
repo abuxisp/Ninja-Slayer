@@ -34,13 +34,11 @@ class Monster {
 
   }
   receiveHit() {
+    if (this.isInvincible) return
 
     this.health--
     this.isInvincible = true
-
   }
-
-
 
 
   draw(c) {
@@ -78,9 +76,12 @@ class Monster {
       }
     }
 
+    // 0 - 3
     const intervalToGoToNextFrame = 0.15
-    if(this.elapsedTime > intervalToGoToNextFrame) {
-      this.currentFrame = (this.currentFrame + 1) % this.currentSprite.frameCount
+
+    if (this.elapsedTime > intervalToGoToNextFrame) {
+      this.currentFrame =
+        (this.currentFrame + 1) % this.currentSprite.frameCount
       this.elapsedTime -= intervalToGoToNextFrame
     }
 
