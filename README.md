@@ -1,4 +1,5 @@
 # Ninja-Slayer
+<img width="1282" height="717" alt="Screenshot 2026-11-02 002254" src="https://github.com/user-attachments/assets/3bc9c6a7-c344-4d13-a9e0-74b3dd97383f" />
 
 ## Game Description
 **Ninja-Slayer** is an action-adventure web game built with JavaScript[cite: 1] where players step into the shoes of a swift ninja navigating a richly layered world. Featuring custom pixel art assets, environmental decorations[cite: 1], and interactive elements like monsters, hearts, and lances, players must explore detailed landscapes, manage collisions[cite: 1], and survive encounters with various threats to master the way of the ninja.
