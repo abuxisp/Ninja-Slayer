@@ -1,40 +1,45 @@
 # Ninja-Slayer
 <img width="1282" height="717" alt="Screenshot 2026-11-02 002254" src="https://github.com/user-attachments/assets/3bc9c6a7-c344-4d13-a9e0-74b3dd97383f" />
 
-## Game Description
-**Ninja-Slayer** is an action-adventure web game built with JavaScript[cite: 1] where players step into the shoes of a swift ninja navigating a richly layered world. Featuring custom pixel art assets, environmental decorations[cite: 1], and interactive elements like monsters, hearts, and lances, players must explore detailed landscapes, manage collisions[cite: 1], and survive encounters with various threats to master the way of the ninja.
+# What the Game Is
+Ninja-Slayer is a 2D browser-based action-adventure game built with HTML, CSS, and modular JavaScript. In this game, you step into the shoes of a swift ninja navigating a richly layered, custom pixel-art world filled with terrain, houses, trees, and environmental decorations.
 
----
+# Why It Was Made
+This project was built to explore core game development concepts using vanilla web technologies. It serves as a practical implementation of object-oriented programming in JavaScript, custom canvas rendering, multi-layered map building, and collision detection systems without relying on heavy external game engines.
 
-## Project Structure
-The repository is organized into the following key directories and files[cite: 1]:
-*   **`classes/`**: Contains core object-oriented components for game entities:[cite: 1]
-    *   `Player.js`: Handles player state, movement, and controls[cite: 1].
-    *   `Monster.js`: Manages enemy entities and behaviors[cite: 1].
-    *   `CollisionBlock.js`: Manages map boundaries and solid obstacles[cite: 1].
-    *   `Heart.js`: Handles health pickups[cite: 1].
-    *   `Sprite.js`: Base rendering class for visual elements[cite: 1].
-*   **`data/`**: Holds map layouts, collision arrays, and environmental layer data (e.g., terrain, trees, houses, decorations, and front renders)[cite: 1].
-*   **`images/`**: Houses all graphical assets including character sprites, tilesets, terrain, bamboo, hearts, lances, and dragons[cite: 1].
-*   **`js/`**: Contains game logic execution scripts:[cite: 1]
-    *   `index.js`: Main entry point and game loop[cite: 1].
-    *   `eventListeners.js`: Manages keyboard and user inputs[cite: 1].
-    *   `utils.js`: Helper functions used across the codebase[cite: 1].
-*   **`index.html`**: The main webpage hosting the game canvas[cite: 1].
+# How It Works
+The game relies on a structured architecture that separates logic, entities, map data, and visual assets:
 
----
+Core Engine & Game Loop (js/): The main execution happens in index.js, which drives the canvas rendering loop. User inputs are captured via eventListeners.js, and helper utilities are handled in utils.js.
 
-## How to Play
+Object-Oriented Entities (classes/):
 
-### Controls
-*   **Movement:** Use the arrow keys or standard directional inputs (configured via `eventListeners.js`) to move your ninja character across the map[cite: 1].
-*   **Interaction:** Navigate around obstacles, avoid enemy monsters, and collect items like hearts to maintain health[cite: 1].
+Player.js manages player states, movement controls, and interactions.
 
-### Objectives
-1.  **Explore:** Traverse through the multi-layered environment consisting of terrain, trees, houses, and decorative elements[cite: 1].
-2.  **Survive:** Avoid colliding with hostile monsters and hazards mapped into the game blocks[cite: 1].
-3.  **Collect:** Gather power-ups and health items (such as hearts) hidden or placed throughout the levels[cite: 1].
+Monster.js handles enemy entities and behaviors.
 
+CollisionBlock.js enforces map boundaries and solid obstacles.
+
+Heart.js handles health and pickup mechanics.
+
+Sprite.js acts as the base class for rendering visual graphics.
+
+Map Data & Layering (data/): The world is constructed using array-based map layouts that separate background terrain, houses, landscape decorations, trees, collision maps, and foreground rendering layers.
+
+Asset Pipeline (images/): Custom graphical assets—including character sprites, tilesets, bamboo, hearts, lances, leaves, and dragons—are dynamically loaded and drawn onto the HTML5 canvas.
+
+# How to Play
+Controls
+Movement: Use your keyboard directional keys (arrow keys or standard inputs configured in eventListeners.js) to move your ninja across the map.
+
+Survival: Navigate carefully around obstacles, avoid hostile enemy monsters, and collect items like hearts to manage your health.
+
+Objectives
+Explore: Traverse through the detailed multi-layered environment.
+
+Survive: Evade enemy threats and respect the solid collision boundaries of the map.
+
+Collect: Gather items and power-ups hidden throughout the game world.
 ---
 
 ## Want to play?
