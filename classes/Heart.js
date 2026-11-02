@@ -1,5 +1,5 @@
 class Heart {
-  constructor({ x, y }) {
+  constructor({ x,y }) {
     this.x = x
     this.y = y
     this.width = 20
@@ -14,6 +14,7 @@ class Heart {
     this.image.onload = () => {
       this.loaded = true
     }
+
     this.image.src = './images/heart.png'
     this.currentFrame = 4
 
@@ -26,7 +27,7 @@ class Heart {
     }
   }
 
-  draw(c) {
+   draw(c) {
     if (!this.loaded) return
 
     c.drawImage(
